@@ -1,0 +1,24 @@
+https://leetcode.com/problems/coin-change/
+
+class Solution {
+    public int coinChange(int[] coins, int amount) {
+        int max = amount + 1; // A value greater than any possible number of coins
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, max); 
+        dp[0] = 0;
+        for(int i=1; i<dp.length; i++){
+            for(int coin: coins){
+                if(i >= coin){
+                    int requiredCoin = dp[i-coin]+1;
+                    dp[i] = Math.min(dp[i], requiredCoin);
+                }
+            }
+        }
+        int result = dp[amount];
+        if(result == max){
+            return -1;
+        }else{
+            return result;
+        }
+    }
+}
