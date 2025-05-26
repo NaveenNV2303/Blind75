@@ -1,0 +1,21 @@
+https://leetcode.com/problems/number-of-1-bits/submissions/1644776798/
+
+class Solution {
+    public int hammingWeight(int n) {
+        int count  = 0;
+        while(n != 0){
+            n = n & (n-1);
+            count++;
+        }
+        return count;
+    }
+}
+
+// public int hammingWeight(int n) {
+//     int count = 0;
+//     while (n != 0) {
+//         count += (n & 1); // Add 1 if LSB is 1, else add 0
+//         n = n >>> 1;      // Logical right shift (fills leftmost bit with 0)
+//     }
+//     return count;
+// }
