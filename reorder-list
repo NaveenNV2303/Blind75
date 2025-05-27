@@ -35,7 +35,7 @@ https://leetcode.com/problems/reorder-list/
 //             head.next.next = temp;
 //             head = head.next.next;
 //         }
-//         if (head != null) head.next = null;
+//         head.next = null;   //To avoid the last node pointing itself.
 //     }
 // }
 
