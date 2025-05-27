@@ -1,0 +1,83 @@
+https://leetcode.com/problems/reorder-list/
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+// class Solution {
+//     public void reorderList(ListNode head) {
+//         if(head != null && head.next != null && head.next.next != null){
+//             ListNode slow = head;
+//             ListNode fast = head.next;
+//             while(fast != null && fast.next != null){
+//                 slow = slow.next;
+//                 fast = fast.next.next;
+//             }
+//             Deque<ListNode> stack = new ArrayDeque<>();
+//             slow = slow.next; /* this is the middleNode */
+//             while(slow != null){
+//                 stack.push(slow);
+//                 slow = slow.next;
+//             }
+//             reOrder(stack, head);
+//         }
+//     }
+//     private void reOrder(Deque<ListNode> stack, ListNode head){
+//         while(stack.peek() != null){
+//             ListNode temp = head.next;
+//             head.next = stack.pop();
+//             head.next.next = temp;
+//             head = head.next.next;
+//         }
+//         if (head != null) head.next = null;
+//     }
+// }
+
+
+class Solution {
+    public void reorderList(ListNode head) {
+        if(head == null || head.next == null || head.next.next == null) return;
+
+        // Step 1: Find middle of the list
+        ListNode slow = head, fast = head;
+        while(fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        // Step 2: Split and reverse second half
+        ListNode second = slow.next;
+        slow.next = null;  // Break the list into two halves
+        second = reverse(second);
+
+        // Step 3: Merge two halves
+        ListNode first = head;
+        while(second != null){
+            ListNode temp1 = first.next;
+            ListNode temp2 = second.next;
+
+            first.next = second;
+            second.next = temp1;
+
+            first = temp1;
+            second = temp2;
+        }
+    }
+
+    private ListNode reverse(ListNode head){
+        ListNode prev = null;
+        while(head != null){
+            ListNode nextNode = head.next;
+            head.next = prev;
+            prev = head;
+            head = nextNode;
+        }
+        return prev;
+    }
+}
