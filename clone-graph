@@ -1,0 +1,72 @@
+https://leetcode.com/problems/clone-graph/
+
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public List<Node> neighbors;
+    public Node() {
+        val = 0;
+        neighbors = new ArrayList<Node>();
+    }
+    public Node(int _val) {
+        val = _val;
+        neighbors = new ArrayList<Node>();
+    }
+    public Node(int _val, ArrayList<Node> _neighbors) {
+        val = _val;
+        neighbors = _neighbors;
+    }
+}
+*/
+
+// BFS
+
+// class Solution {
+//     public Node cloneGraph(Node node) {
+//         if (node == null) return null;
+        
+//         Queue<Node> queue = new LinkedList<>();
+//         queue.offer(node);
+//         Map<Node, Node> map = new HashMap<>();
+//         map.put(node, new Node(node.val, new ArrayList<>()));
+
+//         while(!queue.isEmpty()){
+//             Node currentNode = queue.poll();
+//             for(Node neighbor: currentNode.neighbors){
+//                 if(!map.containsKey(neighbor)){
+//                     map.put(neighbor, new Node(neighbor.val, new ArrayList<>()));
+//                     queue.offer(neighbor);
+//                 }
+//                 map.get(currentNode).neighbors.add(map.get(neighbor));
+//             }
+//         }
+//         return map.get(node);
+//     }
+// }
+
+// DFS
+
+class Solution {
+    private Map<Node, Node> visited = new HashMap<>();
+
+    public Node cloneGraph(Node node) {
+        if (node == null) return null;
+
+        // If the node was already cloned, return it
+        if (visited.containsKey(node)) {
+            return visited.get(node);
+        }
+
+        // Clone the node (but no neighbors yet)
+        Node clone = new Node(node.val, new ArrayList<>());
+        visited.put(node, clone); // mark as cloned
+
+        // Clone neighbors recursively
+        for (Node neighbor : node.neighbors) {
+            clone.neighbors.add(cloneGraph(neighbor));
+        }
+
+        return clone;
+    }
+}
