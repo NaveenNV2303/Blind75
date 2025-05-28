@@ -1,0 +1,81 @@
+https://leetcode.com/problems/course-schedule/
+
+class Solution {
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> adjList = new ArrayList<>();
+        for(int i=0; i<numCourses; i++){
+            adjList.add(new ArrayList<>());
+        }
+        for(int i=0; i<prerequisites.length; i++){
+            adjList.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        }
+
+        int[] visited = new int[numCourses];
+        for(int i=0; i<numCourses; i++){
+            if(!dfs(i,adjList, visited)) return false;
+        }
+        return true;
+    }
+
+    public boolean dfs(int current, List<List<Integer>> adjList, int[] visited){
+        if(visited[current] == 1) return false;
+        if(visited[current] == 2) return true;
+        visited[current] = 1;
+        for(int neighbor: adjList.get(current)){
+            if(!dfs(neighbor, adjList, visited)) return false;
+        }
+        visited[current] = 2;
+        return true;
+    }
+}
+
+
+// bfs
+// class Solution {
+//     public boolean canFinish(int numCourses, int[][] prerequisites) {
+//         // Step 1: Build adjacency list for graph
+//         List<List<Integer>> adjList = new ArrayList<>();
+//         for (int i = 0; i < numCourses; i++) {
+//             adjList.add(new ArrayList<>());
+//         }
+
+//         // Step 2: Initialize in-degree array
+//         int[] inDegree = new int[numCourses];
+
+//         // Step 3: Build graph and populate in-degree
+//         for (int[] prereq : prerequisites) {
+//             int course = prereq[0];
+//             int prereqCourse = prereq[1];
+//             adjList.get(prereqCourse).add(course);
+//             inDegree[course]++;
+//         }
+
+//         // Step 4: Initialize queue with all courses having zero in-degree
+//         Queue<Integer> queue = new LinkedList<>();
+//         for (int i = 0; i < numCourses; i++) {
+//             if (inDegree[i] == 0) {
+//                 queue.offer(i);
+//             }
+//         }
+
+//         // Step 5: Count of courses that can be taken
+//         int visitedCourses = 0;
+
+//         // Step 6: Process queue
+//         while (!queue.isEmpty()) {
+//             int current = queue.poll();
+//             visitedCourses++;
+
+//             // Decrement in-degree for neighbors
+//             for (int neighbor : adjList.get(current)) {
+//                 inDegree[neighbor]--;
+//                 if (inDegree[neighbor] == 0) {
+//                     queue.offer(neighbor);
+//                 }
+//             }
+//         }
+
+//         // Step 7: If all courses visited, return true; else false (cycle detected)
+//         return visitedCourses == numCourses;
+//     }
+// }
