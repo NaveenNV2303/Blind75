@@ -1,0 +1,61 @@
+https://takeuforward.org/plus/dsa/problems/alient-dictionary
+
+class Solution {
+    public String findOrder(String [] dict, int N, int K) {
+        if (N == 0) return "";
+        if (N == 1) return "" + dict[0].charAt(0);
+
+        Map<Character, Integer> inDegree = new HashMap<>();
+        Map<Character, List<Character>> map = new HashMap<>();
+        Queue<Character> queue = new LinkedList<>();
+
+        // Initialize inDegree and map for all characters
+        for (int i = 0; i < N; i++) {
+            for (char c : dict[i].toCharArray()) {
+                inDegree.putIfAbsent(c, 0);
+                map.putIfAbsent(c, new ArrayList<>());
+            }
+        }
+
+        for (int i = 0; i < N - 1; i++) {
+            compareWords(dict[i], dict[i+1], inDegree, map);
+        }
+
+        for (Map.Entry<Character, Integer> entry : inDegree.entrySet()) {
+            if (entry.getValue() == 0) queue.add(entry.getKey());
+        }
+
+        StringBuilder result = new StringBuilder();
+        while (!queue.isEmpty()) {
+            Character ch = queue.poll();
+            result.append(ch);
+            List<Character> chList = map.get(ch);
+            for (Character c : chList) {
+                inDegree.put(c, inDegree.get(c) - 1);
+                if (inDegree.get(c) == 0) queue.add(c);
+            }
+        }
+
+        return result.toString();
+    }
+
+    private void compareWords(String a, String b, Map<Character, Integer> inDegree, Map<Character, List<Character>> map) {
+        if (!a.equals(b)) {
+            int minLength = Math.min(a.length(), b.length());
+            int current = 0;
+
+            while (current < minLength) {
+                char aChar = a.charAt(current);
+                char bChar = b.charAt(current);
+                if (aChar == bChar) {
+                    current++;
+                } else {
+                    map.get(aChar).add(bChar);
+                    inDegree.put(bChar, inDegree.get(bChar) + 1);
+                    break;
+                }
+            }
+        }
+    }
+
+}
