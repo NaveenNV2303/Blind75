@@ -1,0 +1,149 @@
+LeetCode 323. Number of Connected Components in an Undirected Graph
+🔗 Link: https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/description/
+❓ Problem Statement
+You have a graph of n nodes. You are given an integer n and a list of edges where edges[i] = [a, b] indicates that there is an undirected edge between nodes a and b.
+Return the number of connected components in the graph.
+
+🧠 What is a Connected Component?
+A connected component is a set of nodes in a graph such that:
+Every pair of nodes in the component is connected via a path.
+The component is maximal: you cannot add any more nodes without breaking the definition.
+
+📥 Input
+n: integer (1 ≤ n ≤ 2000) — the number of nodes, labeled from 0 to n - 1
+edges: list of integer pairs (0 ≤ a, b < n), where each pair represents an undirected edge between nodes a and b
+
+📤 Output
+Return the total number of connected components in the undirected graph.
+
+✅ Example 1
+Input: n = 5
+edges = [[0, 1], [1, 2], [3, 4]]
+Output: 2
+
+🧭 Explanation:
+We have 5 nodes: 0, 1, 2, 3, 4.
+
+Graph structure:
+
+Component 1:     Component 2:
+    0                3
+     \              /
+      1            4
+       \
+        2
+
+Nodes 0, 1, and 2 are connected → 1 connected component.
+Nodes 3 and 4 are connected → 1 connected component.
+Total: 2 connected components.
+
+✅ Example 2
+Input:
+n = 5
+edges = [[0, 1], [1, 2], [2, 3], [3, 4]]
+Output: 1
+
+🧭 Explanation:
+All nodes are connected together in a single chain. So, there's only 1 connected component.
+0 - 1 - 2 - 3 - 4
+
+🚫 Constraints
+1 <= n <= 2000
+0 <= edges.length <= 5000
+edges[i].length == 2
+0 <= a, b < n
+No duplicate edges
+No self-loops (edges from a node to itself)
+
+Solution:
+
+//dfs
+
+class Solution {
+    public int countComponents(int n, int[][] edges) {
+        // Step 1: Build the adjacency list
+        List<List<Integer>> adjList = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            adjList.add(new ArrayList<>());
+        }
+
+        for (int[] edge : edges) {
+            int a = edge[0];
+            int b = edge[1];
+            adjList.get(a).add(b);
+            adjList.get(b).add(a); // Because it's an undirected graph
+        }
+
+        // Step 2: Use DFS to count connected components
+        boolean[] visited = new boolean[n];
+        int count = 0;
+
+        for (int i = 0; i < n; i++) {
+            if (!visited[i]) {
+                dfs(i, adjList, visited);
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    private void dfs(int node, List<List<Integer>> adjList, boolean[] visited) {
+        if (visited[node]) return;
+
+        visited[node] = true;
+
+        for (int neighbor : adjList.get(node)) {
+            if (!visited[neighbor]) {
+                dfs(neighbor, adjList, visited);
+            }
+        }
+    }
+}
+
+
+
+
+//bfs
+class Solution {
+    public int countComponents(int n, int[][] edges) {
+        List<List<Integer>> adjList = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            adjList.add(new ArrayList<>());
+        }
+
+        for (int[] edge : edges) {
+            int a = edge[0];
+            int b = edge[1];
+            adjList.get(a).add(b);
+            adjList.get(b).add(a);
+        }
+
+        boolean[] visited = new boolean[n];
+        int count = 0;
+
+        for (int i = 0; i < n; i++) {
+            if (!visited[i]) {
+                bfs(i, adjList, visited);
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private void bfs(int start, List<List<Integer>> adjList, boolean[] visited) {
+        Queue<Integer> queue = new LinkedList<>();
+        queue.offer(start);
+        visited[start] = true;
+
+        while (!queue.isEmpty()) {
+            int current = queue.poll();
+            for (int neighbor : adjList.get(current)) {
+                if (!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    queue.offer(neighbor);
+                }
+            }
+        }
+    }
+}
