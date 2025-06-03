@@ -1,0 +1,20 @@
+https://leetcode.com/problems/word-break/
+
+class Solution {
+    public boolean wordBreak(String s, List<String> wordDict) {
+        Set<String> dict = new HashSet<>(wordDict);
+        boolean[] dp = new boolean[s.length()+1];
+        dp[0] = true;
+        
+        // Now loop through each element and their previous elements.
+
+        for(int i=0; i<s.length(); i++){
+            for(int j=i; j>=0; j--){
+                if(dp[j] && dict.contains(s.substring(j,i+1))){
+                    dp[i+1] = true;
+                }
+            }
+        }
+        return dp[s.length()];
+    }
+}
