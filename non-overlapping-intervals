@@ -1,0 +1,21 @@
+https://leetcode.com/problems/non-overlapping-intervals/
+
+class Solution {
+    public int eraseOverlapIntervals(int[][] intervals) {
+        
+        Arrays.sort(intervals, (a,b) -> Integer.compare(a[1],b[1]));
+        
+        int result = 0;
+        int maxValue = intervals[0][1];
+        
+        for(int i=1; i<intervals.length; i++){
+            if(intervals[i][0] >= maxValue){
+                maxValue = intervals[i][1];
+            }else{
+                result++;
+            }
+        }
+        
+        return result;
+    }
+}
