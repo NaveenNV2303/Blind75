@@ -1,0 +1,27 @@
+https://leetcode.com/problems/longest-repeating-character-replacement/
+
+class Solution {
+    public int characterReplacement(String s, int k) {
+        
+        int[] characters = new int[26];
+        int left = 0, right = 0, result = 0, maxCount = 0;
+
+// expand the right
+        while(right < s.length()){        
+            char c = s.charAt(right);
+            characters[c-'A']+=1;
+            maxCount = Math.max(maxCount, characters[c-'A']);
+
+// shrink the left till the count is lesser than or equal to k
+            while(right - left + 1 - maxCount > k){
+                characters[s.charAt(left) - 'A'] -=1;
+                left++;
+            }
+
+            result = Math.max(result, right-left+1);
+            right++;
+        }
+
+        return result;
+    }
+}
