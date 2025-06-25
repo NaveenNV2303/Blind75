@@ -1,0 +1,68 @@
+https://leetcode.com/problems/encode-and-decode-strings/description/
+
+class Codec {
+    // Encodes a list of strings to a single string.
+    public String encode(List<String> strs) {
+        StringBuilder sb = new StringBuilder();
+        for (String str : strs) {
+            sb.append(str.length()).append('#').append(str);
+        }
+        return sb.toString();
+    }
+
+    // Decodes a single string to a list of strings.
+    public List<String> decode(String s) {
+        List<String> result = new ArrayList<>();
+        int i = 0;
+        while (i < s.length()) {
+            int j = i;
+            // Find the separator '#'
+            while (s.charAt(j) != '#') {
+                j++;
+            }
+            int length = Integer.parseInt(s.substring(i, j));
+            j++; // skip '#'
+            result.add(s.substring(j, j + length));
+            i = j + length;
+        }
+        return result;
+    }
+}
+
+
+
+
+
+
+
+
+You are asked to design an algorithm to encode a list of strings to a single string, and decode that string back to a list of strings.
+
+You are given: List<String> strs
+
+Your task is to implement:
+
+String encode(List<String> strs)
+
+List<String> decode(String s)
+
+⚠ The encoded string must be able to handle:
+
+Empty strings
+
+Strings containing any characters (including digits, special symbols, etc.)
+
+✅ The encoded string should be unambiguous — decoding should always give back the exact list of original strings.
+
+
+🌟 Example Input/Output
+
+Example 1:
+Input: ["leet", "code", "123", ""]
+Encoded: "4#leet4#code3#1230#"
+Decoded: ["leet", "code", "123", ""]
+
+Example 2:
+Input: ["", ""]
+Encoded: "0#0#"
+Decoded: ["", ""]
