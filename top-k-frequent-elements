@@ -25,3 +25,46 @@ class Solution {
         return result;
     }
 }
+
+// the above one is O(n log k) and the belwo one is O(n)
+
+import java.util.*;
+
+class Solution {
+    public int[] topKFrequent(int[] nums, int k) {
+        // Step 1: Count frequency of each element
+        Map<Integer, Integer> freqMap = new HashMap<>();
+        for (int num : nums) {
+            freqMap.put(num, freqMap.getOrDefault(num, 0) + 1);
+        }
+
+        // Step 2: Create buckets where index = frequency
+        // The max frequency can be nums.length
+        List<Integer>[] buckets = new List[nums.length + 1];
+        for (int i = 0; i <= nums.length; i++) {
+            buckets[i] = new ArrayList<>();
+        }
+
+        // Step 3: Fill buckets with numbers based on their frequency
+        for (Map.Entry<Integer, Integer> entry : freqMap.entrySet()) {
+            int frequency = entry.getValue();
+            buckets[frequency].add(entry.getKey());
+        }
+
+        // Step 4: Collect top k frequent elements from buckets starting from the highest frequency
+        List<Integer> resultList = new ArrayList<>();
+        for (int freq = buckets.length - 1; freq >= 0 && resultList.size() < k; freq--) {
+            if (!buckets[freq].isEmpty()) {
+                resultList.addAll(buckets[freq]);
+            }
+        }
+
+        // Step 5: Convert result list to array and return first k elements
+        int[] result = new int[k];
+        for (int i = 0; i < k; i++) {
+            result[i] = resultList.get(i);
+        }
+
+        return result;
+    }
+}
